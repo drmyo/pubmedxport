@@ -87,14 +87,14 @@ body {
 
 /* File type icons */
 .download-link.csv::before {
-    content: "📊 ";
+    content: "🧾📊 ";
 }
 
 .download-link.json::before {
-    content: "📄 ";
+    content: "🧾💻 ";
 }
 
 .download-link.bib::before {
-    content: "📑 ";
+    content: "📚📝 ";
 }
 

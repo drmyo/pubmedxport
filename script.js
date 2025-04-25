@@ -2,9 +2,12 @@ document.addEventListener('DOMContentLoaded', function() {
     const fetchButton = document.getElementById('fetchButton');
     const progressSection = document.getElementById('progressSection');
     const progressMessages = document.getElementById('progressMessages');
-    const progressBar = document.getElementById('progressBar');
+    
     const downloadLinks = document.getElementById('downloadLinks');
     const errorSection = document.getElementById('errorSection');
+
+   
+
 
     fetchButton.addEventListener('click', async function() {
         // Reset UI
@@ -210,13 +213,15 @@ document.addEventListener('DOMContentLoaded', function() {
         const delay = () => new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300));  // Random delay to avoid hitting rate limits
     
         let processedCount = 0;  // Track number of processed articles
+        let startTime = Date.now(); // Start the timer
         progressBar.style.width = '0%';  // Reset progress bar
+        progressBar.textContent = '0%';  // Reset progress text
     
         // Iterate over the PMIDs in batches
         for (let i = 0; i < pmids.length; i += batchSize) {
             const batch = pmids.slice(i, i + batchSize);
             const batchPromises = [];
-            
+    
             // Process each PMID in the batch
             for (let j = 0; j < batch.length; j++) {
                 const pmid = batch[j];
@@ -231,7 +236,14 @@ document.addEventListener('DOMContentLoaded', function() {
                             processedCount++;
                             // Update the progress bar after each article
                             const progress = Math.min(100, Math.round((processedCount / pmids.length) * 100));
+                            const elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
+                            const minutes = Math.floor(elapsedTime / 60);
+                            const seconds = Math.floor(elapsedTime % 60);
+                            const timeFormatted = `${minutes}m ${seconds}s`;
+    
+                            // Update progress bar with percentage and elapsed time
                             progressBar.style.width = `${progress}%`;
+                            progressBar.textContent = `${progress}% - ${timeFormatted}`; // Show both percentage and time
                         } catch (error) {
                             console.error(`Error fetching PMID ${pmid}:`, error);
                         }
@@ -253,7 +265,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
         return results;  // Return the results after all articles are fetched
     }
-
+    
     async function fetchArticleDetails(apiKey, pmid) {
         const params = new URLSearchParams({
             db: 'pubmed',
@@ -261,55 +273,55 @@ document.addEventListener('DOMContentLoaded', function() {
             retmode: 'xml',
             api_key: apiKey
         });
-
+    
         const headers = {
             'User-Agent': 'PubMedFetcher/1.0 (webapp)'
         };
-
+    
         try {
             const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?${params}`, { headers });
             const text = await response.text();
-            
+    
             if (!response.ok) {
                 throw new Error(text.includes('API key') ? 'Invalid API key' : 'Failed to fetch article');
             }
-
+    
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(text, "text/xml");
             const error = xmlDoc.querySelector('ERROR');
             if (error) {
                 throw new Error(error.textContent);
             }
-
+    
             const article = xmlDoc.querySelector('PubmedArticle');
             if (!article) {
                 throw new Error('No PubmedArticle found');
             }
-
+    
             function safeExtract(selector, parent = article) {
                 const element = parent.querySelector(selector);
                 return element && element.textContent ? element.textContent.trim() : '';
             }
-
+    
             const authors = Array.from(article.querySelectorAll('AuthorList > Author')).map(author => {
                 const foreName = safeExtract('ForeName', author);
                 const lastName = safeExtract('LastName', author);
                 return `${foreName} ${lastName}`.trim();
             }).filter(name => name).join(', ');
-
+    
             const doiElement = Array.from(article.querySelectorAll('ArticleId')).find(el => 
                 el.getAttribute('IdType') === 'doi' && el.textContent
             );
             const doi = doiElement ? `https://doi.org/${doiElement.textContent.trim()}` : '';
-
+    
             const abstractTexts = Array.from(article.querySelectorAll('AbstractText')).map(el => 
                 el.textContent.trim()
             ).filter(text => text).join(' ');
-
+    
             const publicationTypes = Array.from(article.querySelectorAll('PublicationType')).map(el => 
                 el.textContent.trim()
             ).filter(text => text).join(', ');
-
+    
             return {
                 PMID: pmid,
                 Title: safeExtract('ArticleTitle'),
@@ -328,6 +340,7 @@ document.addEventListener('DOMContentLoaded', function() {
             return null;
         }
     }
+    
 
     function exportData(articles, format) {
         switch (format) {
