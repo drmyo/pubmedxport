@@ -1,0 +1,98 @@
+body {
+    background-color: #f8f9fa;
+    padding-bottom: 50px;
+}
+
+.card {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border: none;
+}
+
+.card-header {
+    font-weight: bold;
+}
+
+.progress {
+    height: 25px;
+}
+
+.progress-bar {
+    transition: width 0.3s ease;
+}
+
+#progressMessages {
+    min-height: 100px;
+    max-height: 300px;
+    overflow-y: auto;
+    border: 1px solid #dee2e6;
+    padding: 10px;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.message {
+    margin-bottom: 5px;
+    padding: 5px;
+    border-radius: 3px;
+}
+
+.message-success {
+    background-color: #d4edda;
+    color: #155724;
+}
+
+.message-warning {
+    background-color: #fff3cd;
+    color: #856404;
+}
+
+.message-error {
+    background-color: #f8d7da;
+    color: #721c24;
+}
+
+.message-info {
+    background-color: #d1ecf1;
+    color: #0c5460;
+}
+
+/* Download links container */
+#downloadLinks {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+}
+
+/* Individual download links */
+.download-link {
+    display: block;
+    padding: 12px;
+    background-color: #e9ecef;
+    border-radius: 6px;
+    text-decoration: none;  /* No underline */
+    color: #212529;
+    border: 1px solid #ced4da;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    text-align: center;
+}
+
+.download-link:hover {
+    background-color: #dee2e6;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+/* File type icons */
+.download-link.csv::before {
+    content: "📊 ";
+}
+
+.download-link.json::before {
+    content: "📄 ";
+}
+
+.download-link.bib::before {
+    content: "📑 ";
+}
