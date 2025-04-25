@@ -18,8 +18,18 @@ document.addEventListener('DOMContentLoaded', function() {
         progressBar.style.width = '0%';
         progressBar.textContent = '0%';
     
-        // Disable button & show spinner
+        // Disable all user interactions (buttons, inputs, checkboxes)
         fetchButton.disabled = true;
+        document.getElementById('exportCSV').disabled = true;
+        document.getElementById('exportJSON').disabled = true;
+        document.getElementById('exportBib').disabled = true;
+        document.getElementById('apiKey').disabled = true;
+        document.getElementById('parallelRequests').disabled = true;
+        document.getElementById('searchQuery').disabled = true;
+        document.getElementById('startYear').disabled = true;
+        document.getElementById('endYear').disabled = true;
+        document.getElementById('outputBaseName').disabled = true;
+    
         spinner.style.display = 'inline-block';
     
         // Get input values
@@ -114,7 +124,18 @@ document.addEventListener('DOMContentLoaded', function() {
             addProgressMessage(`❌ An error occurred: ${error.message}`, "error");
             showError(error.message);
         } finally {
+            // Enable user interactions after the process
             fetchButton.disabled = false;
+            document.getElementById('exportCSV').disabled = false;
+            document.getElementById('exportJSON').disabled = false;
+            document.getElementById('exportBib').disabled = false;
+            document.getElementById('apiKey').disabled = false;
+            document.getElementById('parallelRequests').disabled = false;
+            document.getElementById('searchQuery').disabled = false;
+            document.getElementById('startYear').disabled = false;
+            document.getElementById('endYear').disabled = false;
+            document.getElementById('outputBaseName').disabled = false;
+    
             spinner.style.display = 'none';
         }
     
@@ -192,6 +213,28 @@ document.addEventListener('DOMContentLoaded', function() {
             throw error;
         }
     }
+
+    function setFormEnabled(enabled) {
+        const idsToToggle = [
+            'apiKey',
+            'parallelRequests',
+            'searchQuery',
+            'startYear',
+            'endYear',
+            'outputBaseName',
+            'exportCSV',
+            'exportJSON',
+            'exportBib',
+            'fetchButton'
+        ];
+    
+        idsToToggle.forEach(id => {
+            const element = document.getElementById(id);
+            if (element) element.disabled = !enabled;
+        });
+    }
+    
+
 
     async function fetchArticles(apiKey, pmids, maxParallel) {
         const results = [];
