@@ -112,24 +112,20 @@ document.addEventListener('DOMContentLoaded', function() {
                 const content = exportData(articles, exp.format);
                 const blob = new Blob([content], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
-                
-                const button = document.createElement('button');
-                button.className = 'download-button';
-                button.textContent = `📁 Download ${exp.format.toUpperCase()}`;
-                button.onclick = () => {
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = filename;
-                    link.click(); // Trigger the download
-                };
-                
-                downloadLinks.appendChild(button);
-                
-                // Add a line break after the button
-                downloadLinks.appendChild(document.createElement('br'));
-                downloadLinks.appendChild(document.createElement('br'));
             
-                addProgressMessage(`📁 ${exp.format.toUpperCase()} file ready for download`, "success");
+                const link = document.createElement('button');
+                link.className = `download-button download-link ${exp.format}`;
+                link.onclick = function() {
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = filename;
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                };
+                link.innerHTML = `Download ${exp.format.toUpperCase()}`; // Remove line break
+            
+                downloadLinks.appendChild(link);
             }
             
             

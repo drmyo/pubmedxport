@@ -70,8 +70,31 @@ body {
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
+    min-width: 200px; /* Set a minimum width */
+    max-width: 300px; /* Set a maximum width */
+    width: 100%; /* Make all buttons take the full width available within the min/max range */
 }
 
 .download-button:hover {
     background-color: #0056b3;
 }
+
+
+.download-link.json {
+    min-width: 230px; /* Adjust this to match the width of the largest button */
+}
+
+
+/* File type icons */
+.download-link.csv::before {
+    content: "📊 ";
+}
+
+.download-link.json::before {
+    content: "📄 ";
+}
+
+.download-link.bib::before {
+    content: "📑 ";
+}
+
