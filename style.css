@@ -98,3 +98,29 @@ body {
     content: "📚📝 ";
 }
 
+/* Spinner fallback (in your style.css) */
+.spinner {
+    margin-left: 0.5rem;
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-bottom;
+    border: 2px solid currentColor;
+    border-right-color: transparent;
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+}
+
+.spinner::before {
+    content: '\f110'; /* Font Awesome spinner fallback */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    animation: spin 1s linear infinite;
+    display: inline-block;
+}
+
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+  

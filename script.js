@@ -16,7 +16,12 @@ document.addEventListener('DOMContentLoaded', function() {
         errorSection.style.display = 'none';
         progressSection.style.display = 'block';
         progressBar.style.width = '0%';
-        
+        progressBar.textContent = '0%';
+    
+        // Disable button & show spinner
+        fetchButton.disabled = true;
+        spinner.style.display = 'inline-block';
+    
         // Get input values
         const apiKey = document.getElementById('apiKey').value.trim();
         const parallelRequests = parseInt(document.getElementById('parallelRequests').value) || 5;
@@ -29,93 +34,63 @@ document.addEventListener('DOMContentLoaded', function() {
         const exportBib = document.getElementById('exportBib').checked;
     
         // Validate inputs
-        if (!apiKey) {
-            showError("❌ No API key was entered.");
-            return;
-        }
+        if (!apiKey) return showErrorAndReset("❌ No API key was entered.");
+        if (parallelRequests < 3 || parallelRequests > 10) return showErrorAndReset("❌ Please enter a number of parallel requests between 3 and 10.");
+        if (!searchQuery) return showErrorAndReset("❌ No search query provided.");
+        if (startYear && !/^\d{4}$/.test(startYear)) return showErrorAndReset("❌ Invalid start year format. Please use YYYY.");
+        if (endYear && !/^\d{4}$/.test(endYear)) return showErrorAndReset("❌ Invalid end year format. Please use YYYY.");
     
-        if (parallelRequests < 3 || parallelRequests > 10) {
-            showError("❌ Please enter a number of parallel requests between 3 and 10.");
-            return;
-        }
-
-        if (!searchQuery) {
-            showError("❌ No search query provided.");
-            return;
-        }
-    
-        if (startYear && !/^\d{4}$/.test(startYear)) {
-            showError("❌ Invalid start year format. Please use YYYY.");
-            return;
-        }
-    
-        if (endYear && !/^\d{4}$/.test(endYear)) {
-            showError("❌ Invalid end year format. Please use YYYY.");
-            return;
-        }
-    
-        // Convert to integers for comparison
         const startYearInt = startYear ? parseInt(startYear) : null;
         const endYearInt = endYear ? parseInt(endYear) : null;
-    
-        // Additional validations
         const currentYear = new Date().getFullYear();
-        
-        if (startYearInt && startYearInt < 1809) {
-            showError("❌ Start year must be 1809 or later.");
-            return;
-        }
     
-        if (endYearInt && endYearInt > currentYear) {
-            showError(`❌ End year cannot be in the future (${currentYear}).`);
-            return;
-        }
-    
-        if (startYearInt && endYearInt && endYearInt < startYearInt) {
-            showError("❌ End year cannot be earlier than start year.");
-            return;
-        }
+        if (startYearInt && startYearInt < 1809) return showErrorAndReset("❌ Start year must be 1809 or later.");
+        if (endYearInt && endYearInt > currentYear) return showErrorAndReset(`❌ End year cannot be in the future (${currentYear}).`);
+        if (startYearInt && endYearInt && endYearInt < startYearInt) return showErrorAndReset("❌ End year cannot be earlier than start year.");
     
         addProgressMessage("✅ Starting PubMed search...", "info");
-
+    
         try {
-            // Step 1: Search for PMIDs
             const pmids = await searchPubMed(apiKey, searchQuery, startYear, endYear);
-            
+    
             if (!pmids || pmids.length === 0) {
                 addProgressMessage("❌ No articles found matching your criteria.", "error");
                 return;
             }
-
+    
             addProgressMessage(`✅ Found ${pmids.length.toLocaleString()} articles.`, "success");
+    
+            const proceed = confirm(`Found ${pmids.length.toLocaleString()} articles. Do you want to continue fetching their details?`);
+            if (!proceed) {
+                addProgressMessage("⛔ Operation cancelled by user.", "error");
+                return;
+            }
+    
             addProgressMessage("⏳ Fetching article details...", "info");
-
-            // Step 2: Fetch article details
             const articles = await fetchArticles(apiKey, pmids, parallelRequests);
-            
+    
             if (!articles || articles.length === 0) {
                 addProgressMessage("❌ Failed to fetch article details.", "error");
                 return;
             }
-
+    
             addProgressMessage(`✅ Successfully fetched ${articles.length.toLocaleString()} articles.`, "success");
             addProgressMessage("⏳ Exporting results...", "info");
-
-            // Step 3: Export results
+    
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
             const baseFilename = sanitizeFilename(outputBaseName) + '_' + timestamp;
-            
+    
             const exports = [];
             if (exportCSV) exports.push({ format: 'csv', extension: '.csv' });
             if (exportJSON) exports.push({ format: 'json', extension: '.json' });
             if (exportBib) exports.push({ format: 'bib', extension: '.bib' });
-
+    
             for (const exp of exports) {
                 const filename = baseFilename + exp.extension;
                 const content = exportData(articles, exp.format);
                 const blob = new Blob([content], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
-            
+    
                 const link = document.createElement('button');
                 link.className = `download-button download-link ${exp.format}`;
                 link.onclick = function() {
@@ -126,22 +101,33 @@ document.addEventListener('DOMContentLoaded', function() {
                     a.click();
                     document.body.removeChild(a);
                 };
-                link.innerHTML = `Download ${exp.format.toUpperCase()}`; // Remove line break
-            
+                link.innerHTML = `Download ${exp.format.toUpperCase()}`;
                 downloadLinks.appendChild(link);
             }
-            
-            
-
+    
             addProgressMessage("✅ All operations completed successfully!", "success");
             progressBar.style.width = '100%';
-
+            progressBar.textContent = '100%';
+    
         } catch (error) {
             console.error('Error:', error);
             addProgressMessage(`❌ An error occurred: ${error.message}`, "error");
             showError(error.message);
+        } finally {
+            fetchButton.disabled = false;
+            spinner.style.display = 'none';
+        }
+    
+        function showErrorAndReset(msg) {
+            showError(msg);
+            fetchButton.disabled = false;
+            spinner.style.display = 'none';
         }
     });
+    
+    
+    
+    
 
     function addProgressMessage(message, type) {
         const messageDiv = document.createElement('div');
@@ -392,7 +378,8 @@ document.addEventListener('DOMContentLoaded', function() {
       issue = {${article.Issue}},
       doi = {${article.DOI}},
       abstract = {${abstract}},
-      publicationtype = {${article.PublicationType}}
+      publicationtype = {${article.PublicationType}},
+      pmid={${article.PMID}}
     }`;
         }).join('\n');
     }
