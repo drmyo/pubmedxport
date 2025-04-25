@@ -31,6 +31,11 @@ document.addEventListener('DOMContentLoaded', function() {
             return;
         }
     
+        if (parallelRequests < 3 || parallelRequests > 10) {
+            showError("❌ Please enter a number of parallel requests between 3 and 10.");
+            return;
+        }
+
         if (!searchQuery) {
             showError("❌ No search query provided.");
             return;
@@ -108,15 +113,26 @@ document.addEventListener('DOMContentLoaded', function() {
                 const blob = new Blob([content], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
                 
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = filename;
-                link.className = 'download-link';
-                link.innerHTML = `📁 Download ${exp.format.toUpperCase()}<br>`;
-                downloadLinks.appendChild(link);
+                const button = document.createElement('button');
+                button.className = 'download-button';
+                button.textContent = `📁 Download ${exp.format.toUpperCase()}`;
+                button.onclick = () => {
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = filename;
+                    link.click(); // Trigger the download
+                };
                 
+                downloadLinks.appendChild(button);
+                
+                // Add a line break after the button
+                downloadLinks.appendChild(document.createElement('br'));
+                downloadLinks.appendChild(document.createElement('br'));
+            
                 addProgressMessage(`📁 ${exp.format.toUpperCase()} file ready for download`, "success");
             }
+            
+            
 
             addProgressMessage("✅ All operations completed successfully!", "success");
             progressBar.style.width = '100%';
