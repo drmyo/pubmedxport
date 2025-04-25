@@ -124,6 +124,14 @@ document.addEventListener('DOMContentLoaded', function() {
             addProgressMessage(`❌ An error occurred: ${error.message}`, "error");
             showError(error.message);
         } finally {
+            // Reset inputs (except for parallelRequests which is set to 5)
+            document.getElementById('apiKey').value = '';
+            document.getElementById('searchQuery').value = '';
+            document.getElementById('startYear').value = '';
+            document.getElementById('endYear').value = '';
+            document.getElementById('outputBaseName').value = 'pubmed_results';
+            document.getElementById('parallelRequests').value = 5;
+    
             // Enable user interactions after the process
             fetchButton.disabled = false;
             document.getElementById('exportCSV').disabled = false;
@@ -145,6 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
             spinner.style.display = 'none';
         }
     });
+    
     
     
     
