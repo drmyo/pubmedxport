@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     
         const headers = {
-            'User-Agent': 'PubMedFetcher/1.0 (webapp)'
+            
         };
     
         try {
