@@ -19,16 +19,8 @@ document.addEventListener('DOMContentLoaded', function() {
         progressBar.textContent = '0%';
     
         // Disable all user interactions (buttons, inputs, checkboxes)
-        fetchButton.disabled = true;
-        document.getElementById('exportCSV').disabled = true;
-        document.getElementById('exportJSON').disabled = true;
-        document.getElementById('exportBib').disabled = true;
-        document.getElementById('apiKey').disabled = true;
-        document.getElementById('parallelRequests').disabled = true;
-        document.getElementById('searchQuery').disabled = true;
-        document.getElementById('startYear').disabled = true;
-        document.getElementById('endYear').disabled = true;
-        document.getElementById('outputBaseName').disabled = true;
+        setFormEnabled(false);
+
     
         spinner.style.display = 'inline-block';
     
@@ -125,17 +117,8 @@ document.addEventListener('DOMContentLoaded', function() {
             showError(error.message);
         } finally {
             // Enable user interactions after the process
-            fetchButton.disabled = false;
-            document.getElementById('exportCSV').disabled = false;
-            document.getElementById('exportJSON').disabled = false;
-            document.getElementById('exportBib').disabled = false;
-            document.getElementById('apiKey').disabled = false;
-            document.getElementById('parallelRequests').disabled = false;
-            document.getElementById('searchQuery').disabled = false;
-            document.getElementById('startYear').disabled = false;
-            document.getElementById('endYear').disabled = false;
-            document.getElementById('outputBaseName').disabled = false;
-    
+            setFormEnabled(true);
+
             spinner.style.display = 'none';
         }
     
@@ -234,7 +217,10 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
     
-
+    function resetFormValues() {
+        resetFormValues();
+    }
+    
 
     async function fetchArticles(apiKey, pmids, maxParallel) {
         const results = [];
@@ -334,9 +320,9 @@ document.addEventListener('DOMContentLoaded', function() {
             api_key: apiKey
         });
     
-        // Emptying this solved CORS problem
+        
         const headers = {
-            
+            // Emptying this solved CORS problem
         };
     
         try {
