@@ -7,7 +7,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const errorSection = document.getElementById('errorSection');
 
    
-
+    const progressBar = document.getElementById('progressBar');
+    const spinner = document.getElementById('spinner');
 
     fetchButton.addEventListener('click', async function() {
         // Reset UI
@@ -116,9 +117,7 @@ document.addEventListener('DOMContentLoaded', function() {
             addProgressMessage(`❌ An error occurred: ${error.message}`, "error");
             showError(error.message);
         } finally {
-            // Enable user interactions after the process
             setFormEnabled(true);
-
             spinner.style.display = 'none';
         }
     
@@ -218,8 +217,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function resetFormValues() {
-        resetFormValues();
+        document.getElementById("apiKey").value = "";
+        document.getElementById("searchQuery").value = "";
+        document.getElementById("startYear").value = "";
+        document.getElementById("endYear").value = "";
+        document.getElementById("parallelRequests").value = "5";
+        document.getElementById("outputBaseName").value = "pubmed_results";
+        document.getElementById("exportCSV").checked = true;
+        document.getElementById("exportJSON").checked = true;
+        document.getElementById("exportBib").checked = true;
     }
+    
     
 
     async function fetchArticles(apiKey, pmids, maxParallel) {
