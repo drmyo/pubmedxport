@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     
         const headers = {
-            
+            // Emptying this solved CORS issue.
         };
     
         try {
