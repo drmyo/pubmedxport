@@ -124,14 +124,6 @@ document.addEventListener('DOMContentLoaded', function() {
             addProgressMessage(`❌ An error occurred: ${error.message}`, "error");
             showError(error.message);
         } finally {
-            // Reset inputs (except for parallelRequests which is set to 5)
-            document.getElementById('apiKey').value = '';
-            document.getElementById('searchQuery').value = '';
-            document.getElementById('startYear').value = '';
-            document.getElementById('endYear').value = '';
-            document.getElementById('outputBaseName').value = 'pubmed_results';
-            document.getElementById('parallelRequests').value = 5;
-    
             // Enable user interactions after the process
             fetchButton.disabled = false;
             document.getElementById('exportCSV').disabled = false;
@@ -153,7 +145,6 @@ document.addEventListener('DOMContentLoaded', function() {
             spinner.style.display = 'none';
         }
     });
-    
     
     
     
@@ -312,8 +303,9 @@ document.addEventListener('DOMContentLoaded', function() {
             api_key: apiKey
         });
     
+        // Emptying this solved CORS problem
         const headers = {
-            // Emptying this solved CORS issue.
+            
         };
     
         try {
@@ -347,6 +339,18 @@ document.addEventListener('DOMContentLoaded', function() {
                 return `${foreName} ${lastName}`.trim();
             }).filter(name => name).join(', ');
     
+            const affiliations = Array.from(article.querySelectorAll('AffiliationInfo > Affiliation'))
+            .map(el => el.textContent.trim())
+            .filter(Boolean);
+        
+            let country = '';
+            if (affiliations.length > 0) {
+                const lastAffil = affiliations[0]; // or loop to find one with a country
+                const parts = lastAffil.split(/[,;]+/);
+                country = parts[parts.length - 1].trim().replace(/\.$/, ''); // Remove trailing period
+            }
+        
+
             const doiElement = Array.from(article.querySelectorAll('ArticleId')).find(el => 
                 el.getAttribute('IdType') === 'doi' && el.textContent
             );
@@ -365,13 +369,14 @@ document.addEventListener('DOMContentLoaded', function() {
                 Title: safeExtract('ArticleTitle'),
                 Journal: safeExtract('Journal > Title'),
                 Author: authors,
+                Country: country,
                 Year: safeExtract('PubDate > Year') || 
                       safeExtract('PubDate > MedlineDate').slice(0, 4) || '',
                 DOI: doi,
                 Volume: safeExtract('JournalIssue > Volume'),
                 Issue: safeExtract('JournalIssue > Issue'),
                 PublicationType: publicationTypes,
-                Abstract: abstractTexts
+                Abstract: abstractTexts 
             };
         } catch (error) {
             console.error(`Error processing PMID ${pmid}:`, error);
@@ -417,13 +422,19 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Escape special BibTeX characters in the abstract
             const abstract = article.Abstract
-                .replace(/[{}]/g, '')  // Remove curly braces
-                .replace(/\\/g, '\\\\') // Escape backslashes
-                .replace(/"/g, '\\"');   // Escape quotes
+                .replace(/[{}]/g, '')          // Remove curly braces
+                .replace(/\\/g, '\\\\')        // Escape backslashes
+                .replace(/"/g, '\\"')          // Escape quotes
+                .replace(/&/g, '\\&')
+                .replace(/%/g, '\\%')
+                .replace(/\$/g, '\\$')
+                .replace(/#/g, '\\#')
+                .replace(/_/g, '\\_');
             
             return `@article{${article.PMID},
       title = {${article.Title}},
       author = {${authors}},
+      country = {${article.Country}},
       journal = {${article.Journal}},
       year = {${article.Year}},
       volume = {${article.Volume}},
