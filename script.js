@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchQuery = document.getElementById('searchQuery').value.trim();
         const startYear = document.getElementById('startYear').value.trim();
         const endYear = document.getElementById('endYear').value.trim();
-        const outputBaseName = document.getElementById('outputBaseName').value.trim() || 'pubmed_results';
         const exportCSV = document.getElementById('exportCSV').checked;
         const exportJSON = document.getElementById('exportJSON').checked;
         const exportBib = document.getElementById('exportBib').checked;
@@ -82,10 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
             addProgressMessage(`✅ Successfully fetched ${articles.length.toLocaleString()} articles.`, "success");
             addProgressMessage("⏳ Exporting results...", "info");
-    
-            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-            const baseFilename = sanitizeFilename(outputBaseName) + '_' + timestamp;
-    
+        
             const exports = [];
             if (exportCSV) exports.push({ format: 'csv', extension: '.csv' });
             if (exportJSON) exports.push({ format: 'json', extension: '.json' });
@@ -206,7 +202,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'searchQuery',
             'startYear',
             'endYear',
-            'outputBaseName',
             'exportCSV',
             'exportJSON',
             'exportBib',
@@ -225,7 +220,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("startYear").value = "";
         document.getElementById("endYear").value = "";
         document.getElementById("parallelRequests").value = "5";
-        document.getElementById("outputBaseName").value = "pubmed_results";
         document.getElementById("exportCSV").checked = true;
         document.getElementById("exportJSON").checked = true;
         document.getElementById("exportBib").checked = true;
@@ -335,7 +329,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("startYear").value = "";
         document.getElementById("endYear").value = "";
         document.getElementById("parallelRequests").value = "5";
-        document.getElementById("outputBaseName").value = "pubmed_results";
 
         // Reset checkboxes to checked
         document.getElementById("exportCSV").checked = true;
