@@ -33,19 +33,19 @@ document.addEventListener('DOMContentLoaded', function() {
         const endYear = document.getElementById('endYear').value.trim();
     
         // Validate inputs
-        if (!apiKey) return showErrorAndReset("❌ No API key was entered.");
-        if (parallelRequests < 3 || parallelRequests > 10) return showErrorAndReset("❌ Please enter a number of parallel requests between 3 and 10.");
-        if (!searchQuery) return showErrorAndReset("❌ No search query provided.");
-        if (startYear && !/^\d{4}$/.test(startYear)) return showErrorAndReset("❌ Invalid start year format. Please use YYYY.");
-        if (endYear && !/^\d{4}$/.test(endYear)) return showErrorAndReset("❌ Invalid end year format. Please use YYYY.");
+        if (!apiKey) return showErrorAndReset("❌ No API key was entered. Refresh the browser and try again.");
+        if (parallelRequests < 3 || parallelRequests > 10) return showErrorAndReset("❌ Number of parallel requests must be between 3 and 10. Refresh the browser and try again.");
+        if (!searchQuery) return showErrorAndReset("❌ No search query provided. Refresh the browser and try again.");
+        if (startYear && !/^\d{4}$/.test(startYear)) return showErrorAndReset("❌ Invalid start year format. Please use YYYY. Refresh the browser and try again.");
+        if (endYear && !/^\d{4}$/.test(endYear)) return showErrorAndReset("❌ Invalid end year format. Please use YYYY. Refresh the browser and try again.");
     
         const startYearInt = startYear ? parseInt(startYear) : null;
         const endYearInt = endYear ? parseInt(endYear) : null;
         const currentYear = new Date().getFullYear();
     
-        if (startYearInt && startYearInt < 1809) return showErrorAndReset("❌ Start year must be 1809 or later.");
-        if (endYearInt && endYearInt > currentYear) return showErrorAndReset(`❌ End year cannot be in the future (${currentYear}).`);
-        if (startYearInt && endYearInt && endYearInt < startYearInt) return showErrorAndReset("❌ End year cannot be earlier than start year.");
+        if (startYearInt && startYearInt < 1809) return showErrorAndReset("❌ Start year must be 1809 or later. Refresh the browser and try again.");
+        if (endYearInt && endYearInt > currentYear) return showErrorAndReset(`❌ End year cannot be in the future (${currentYear}). Refresh the browser and try again.`);
+        if (startYearInt && endYearInt && endYearInt < startYearInt) return showErrorAndReset("❌ End year cannot be earlier than start year. Refresh the browser and try again.");
     
         addProgressMessage("✅ Starting PubMed search...", "info");
     
@@ -133,9 +133,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
-    
-    
-    
 
     function addProgressMessage(message, type) {
         const messageDiv = document.createElement('div');
@@ -156,14 +153,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function searchPubMed(apiKey, query, startYear, endYear) {
         const currentYear = new Date().getFullYear();
-        
+    
         let fullQuery = query;
         if (startYear || endYear) {
             const effectiveEndYear = endYear || currentYear;
             const dateFilter = `(${startYear || '1809'}[PDAT] : ${effectiveEndYear}[PDAT])`;
             fullQuery = `${query} AND ${dateFilter}`;
         }
-
+    
         const params = new URLSearchParams({
             db: 'pubmed',
             term: fullQuery,
@@ -171,35 +168,34 @@ document.addEventListener('DOMContentLoaded', function() {
             retmax: 10000, // Max allowed by API
             api_key: apiKey
         });
-
+    
         try {
             const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${params}`);
             const text = await response.text();
             
             if (!response.ok) {
-                throw new Error(text.includes('API key') ? 
-                    'Invalid API key. Please check your key and try again.' : 
-                    'Failed to fetch data from PubMed.');
+                throw new Error('Invalid API Key or Network error. Refresh the browser and try again.');
             }
-
+    
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(text, "text/xml");
             const error = xmlDoc.querySelector('ERROR');
             if (error) {
-                throw new Error(error.textContent);
+                throw new Error('Invalid API Key or Network error. Refresh the browser and try again.');
             }
-
+    
             const idElements = xmlDoc.querySelectorAll('IdList Id');
             if (idElements.length === 0) {
                 return [];
             }
-
+    
             return Array.from(idElements).map(el => el.textContent);
         } catch (error) {
             console.error('Search error:', error);
-            throw error;
+            throw new Error('Invalid API Key or Network error. Refresh the browser and try again.');
         }
     }
+    
 
     function setFormEnabled(enabled) {
         const idsToToggle = [
@@ -340,29 +336,24 @@ document.addEventListener('DOMContentLoaded', function() {
             api_key: apiKey
         });
     
-        
-        const headers = {
-            // Emptying this solved CORS problem
-        };
-    
         try {
-            const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?${params}`, { headers });
+            const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?${params}`);
             const text = await response.text();
     
             if (!response.ok) {
-                throw new Error(text.includes('API key') ? 'Invalid API key' : 'Failed to fetch article');
+                throw new Error('Invalid API Key or Network error');
             }
     
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(text, "text/xml");
             const error = xmlDoc.querySelector('ERROR');
             if (error) {
-                throw new Error(error.textContent);
+                throw new Error('Invalid API Key or Network error');
             }
     
             const article = xmlDoc.querySelector('PubmedArticle');
             if (!article) {
-                throw new Error('No PubmedArticle found');
+                throw new Error('Invalid API Key or Network error');
             }
     
             function safeExtract(selector, parent = article) {
@@ -417,7 +408,7 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         } catch (error) {
             console.error(`Error processing PMID ${pmid}:`, error);
-            return null;
+            throw new Error('Invalid API Key or Network error');
         }
     }
     

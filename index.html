@@ -12,6 +12,13 @@
 <body>
     <div class="container">
         <h1 class="text-center my-4">PubMed Metadata eXporter</h1>
+
+        <div style="text-align: center; margin: 20px;">
+            <p>Browser-based tool to search PubMed, retrieve metadata with abstracts, and export results in CSV, JSON, or BibTeX.
+            <br>An API key is required to access PubMed reliably and efficiently.
+            </p>   
+        </div>
+          
         
         <div class="card mb-4">
             <div class="card-header bg-primary text-white">
@@ -22,11 +29,9 @@
                     <label for="apiKey" class="form-label">NCBI PubMed API Key</label>
                     <input type="password" class="form-control" id="apiKey" placeholder="Enter your API key">
                     <div class="form-text">
-                        The API key is required for accessing PubMed programmatically. Without it, you'll face request limits and delays in retrieving large datasets. 
-                        <br>
-                        You can create a free API key at: 
+                        Create a free API key at: 
                         <a href="https://www.ncbi.nlm.nih.gov/account/settings/" target="_blank">NCBI Account Settings</a>
-                        <br><strong>Important:</strong> Keep your API key private.
+                        if you do not have one and <strong>keep it private</strong>.
                     </div>
                 </div>
                 
