@@ -82,15 +82,9 @@ This tool is especially helpful for researchers, students, and educators who nee
 
 ## 🛠️ How to Use
 
-### 1. Clone the Repository
+### 1. Launch the Tool
 
-```bash
-git clone https://github.com/drmyo/pubmedxport.git
-```
-
-### 2. Launch the Tool
-
-- Open `index.html` in the browser.
+- Open `https://drmyo.github.io/pubmedxport` in the browser.
 - Enter the **PubMed API key**, **search query**, number of parallel requests and optional filters (start year, end year).
 - Click **"Fetch PubMed Articles"**.
 
