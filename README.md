@@ -108,8 +108,8 @@ This tool is especially helpful for researchers, students, and educators who nee
 
 
 ## ⚡Disclaimer:
-Generative AI tools, including ChatGPT and GitHub Copilot, were used to assist with coding and troubleshooting.
-The design, development, and final testing of this tool were led and completed by the author.
+Generative AI tools, including ChatGPT, DeepSeek and GitHub Copilot, were used to assist with coding and troubleshooting.
+The design, development, and final testing of this tool were led and completed by the authors.
 
 ## 📄 License
 
