@@ -1,4 +1,4 @@
-# 📚 PubMed Article Fetcher & Exporter (`pubmed2cjb`)
+# 📚 PubMed Article Fetcher & Exporter (`PubMedXport`)
 
 **A browser-based tool to fetch PubMed articles and export them in CSV, JSON, or BibTeX—with abstracts included.**
 
@@ -6,7 +6,7 @@
 
 ## 🚀 Overview
 
-**pubmed2cjb** is a lightweight, browser-based tool that allows researchers to:
+**PubMedXport** is a lightweight, browser-based tool that allows researchers to:
 
 - Perform custom PubMed searches
 - Retrieve data faster using **parallel requests**
@@ -33,7 +33,7 @@ Some third-party tools attempt to bridge these gaps. For instance, [PubData2XL](
 
 ## ❓ What Makes This Tool Different?
 
-**pubmed2cjb** offers a simple, unified workflow with several advantages:
+**PubMedXport** offers a simple, unified workflow with several advantages:
 
 - ✅ **No installation needed** – works entirely within the browser.
 - ✅ **One-step workflow** – search, fetch, and export in a single session.
@@ -85,7 +85,7 @@ This tool is especially helpful for researchers, students, and educators who nee
 ### 1. Clone the Repository
 
 ```bash
-git clone https://github.com/drmyo/pubmed2cjb.git
+git clone https://github.com/drmyo/pubmedxport.git
 ```
 
 ### 2. Launch the Tool
