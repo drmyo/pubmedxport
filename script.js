@@ -70,7 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
             }
     
             addProgressMessage("⏳ Fetching article details...", "info");
-            const articles = await fetchArticles(apiKey, pmids, parallelRequests);
+            const articles = await fetchArticles(apiKey, pmids, parallelRequests, {
+                downloadLinksElement: downloadLinks,
+                addProgressMessage: addProgressMessage
+            });
     
             if (!articles || articles.length === 0) {
                 addProgressMessage("❌ Failed to fetch article details.", "error");
@@ -230,9 +233,9 @@ document.addEventListener('DOMContentLoaded', function() {
     
     
 
-    async function fetchArticles(apiKey, pmids, maxParallel) {
+    async function fetchArticles(apiKey, pmids, maxParallel, { downloadLinksElement, addProgressMessage }) {
         const results = [];
-        const failedPMIDs = []; // ← Add this line
+        const failedPMIDs = [];
         const batchSize = 100;
         const delay = () => new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300));
         let processedCount = 0;
@@ -287,7 +290,34 @@ document.addEventListener('DOMContentLoaded', function() {
             addProgressMessage(`⚠️ Failed to fetch ${failedPMIDs.length} article(s).`, "warning");
             console.warn('Failed PMIDs:', failedPMIDs);
             addProgressMessage(`PMID(s) of article(s) not fetched: ${failedPMIDs.join(', ')}`, "warning");
+            
+            // Create a temporary button container if needed
+            const tempContainer = document.createElement('div');
+            tempContainer.style.display = 'none';
+            document.body.appendChild(tempContainer);
+    
+            const failedPmidsContent = failedPMIDs.join('\n');
+            const failedPmidsBlob = new Blob([failedPmidsContent], { type: 'text/plain' });
+            const failedPmidsUrl = URL.createObjectURL(failedPmidsBlob);
+    
+            const failedLink = document.createElement('button');
+            failedLink.className = 'download-button download-link failed-pmids';
+            failedLink.onclick = function() {
+                const a = document.createElement('a');
+                a.href = failedPmidsUrl;
+                a.download = 'failed_pmids.txt';  // Simple filename since we don't have baseFilename here
+                document.body.appendChild(a);
+                a.click();
+                setTimeout(() => {
+                    document.body.removeChild(a);
+                    URL.revokeObjectURL(failedPmidsUrl);
+                }, 100);
+            };
+            failedLink.innerHTML = 'Download Failed PMIDs';
+            downloadLinksElement.appendChild(failedLink);
+    
         }
+
         
         const finalElapsedTime = (Date.now() - startTime) / 1000;
         const finalMinutes = Math.floor(finalElapsedTime / 60);
