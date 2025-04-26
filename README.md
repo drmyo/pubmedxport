@@ -1,6 +1,6 @@
 # 📚 PubMed Metadata eXporter (`PubMedXport`)
 
-**A browser-based tool to fetch PubMed articles and export them in CSV, JSON, or BibTeX—with abstracts included.**
+**Structured Export of PubMed Citations and Abstracts to CSV, JSON, and BibTeX**
 
 ---
 
