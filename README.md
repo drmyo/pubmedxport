@@ -18,7 +18,7 @@ It's ideal for researchers performing **systematic reviews**, **meta-analyses**,
 
 ---
 
-## ❓ Why This Tool?
+## ❓ Why was this code developed?
 
 PubMed is the gold standard for biomedical literature—but its export options are limited:
 
@@ -27,7 +27,18 @@ PubMed is the gold standard for biomedical literature—but its export options a
 - **No BibTeX export** for citation managers
 - **Abstract-only downloads are unstructured**
 
-This tool solves those pain points by providing structured, complete, and export-ready data in user-friendly formats.
+Some third-party tools exist to bridge these gaps. For instance, PubData2XL (an updated version of PubMed2Data) allows exporting PubMed data to Excel. However, it requires installation and a two-step process: you must first retrieve PMIDs, then rerun the tool to fetch article details. This workflow can be inconvenient and time-consuming, especially for non-programmers. Tools like PubMed2XL are also limited in format support and usability.
+
+## ❓What Makes This Tool Different?
+
+pubmed2cjb is a lightweight, browser-based tool that simplifies and unifies the PubMed data retrieval process:
+    ✅ No installation needed – works entirely in your web browser.
+    ✅ One-step workflow – search, fetch, and export in a single session.
+    ✅ Export formats – get results in CSV (with abstracts), JSON, and BibTeX.
+    ✅ Parallel requests – download large datasets faster using multi-request fetching.
+    ✅ PMID error logging – failed PMIDs are saved in a .txt file for easy manual review.
+
+This tool is especially helpful for researchers, students, and educators who need structured PubMed data quickly—without worrying about technical setup or complex steps.
 
 ---
 
