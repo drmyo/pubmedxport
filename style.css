@@ -16,6 +16,7 @@ body {
     height: 25px;
 }
 
+
 .progress-bar {
     transition: width 0.3s ease;
 }
@@ -59,6 +60,7 @@ body {
 #downloadLinks {
     display: flex;
     flex-direction: column; /* Stack buttons vertically */
+    align-items: center; /* 👈 This centers the buttons horizontally */
     gap: 10px; /* Adds space between buttons */
 }
 

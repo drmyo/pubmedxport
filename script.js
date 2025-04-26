@@ -238,20 +238,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function fetchArticles(apiKey, pmids, maxParallel) {
         const results = [];
-        const batchSize = 100;  // Process in batches of 100 PMIDs at a time
-        const delay = () => new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300));  // Random delay to avoid hitting rate limits
+        const failedPMIDs = []; // ← Add this line
+        const batchSize = 100;
+        const delay = () => new Promise(resolve => setTimeout(resolve, 200 + Math.random() * 300));
+        let processedCount = 0;
+        let startTime = Date.now();
+        progressBar.style.width = '0%';
+        progressBar.textContent = '0%';
     
-        let processedCount = 0;  // Track number of processed articles
-        let startTime = Date.now(); // Start the timer
-        progressBar.style.width = '0%';  // Reset progress bar
-        progressBar.textContent = '0%';  // Reset progress text
-    
-        // Iterate over the PMIDs in batches
         for (let i = 0; i < pmids.length; i += batchSize) {
             const batch = pmids.slice(i, i + batchSize);
             const batchPromises = [];
     
-            // Process each PMID in the batch
             for (let j = 0; j < batch.length; j++) {
                 const pmid = batch[j];
                 batchPromises.push(
@@ -261,39 +259,72 @@ document.addEventListener('DOMContentLoaded', function() {
                             const article = await fetchArticleDetails(apiKey, pmid);
                             if (article) {
                                 results.push(article);
+                            } else {
+                                failedPMIDs.push(pmid); // ← Track failure here
                             }
+                        } catch (error) {
+                            console.error(`Error fetching PMID ${pmid}:`, error);
+                            failedPMIDs.push(pmid); // ← And here too
+                        } finally {
                             processedCount++;
-                            // Update the progress bar after each article
                             const progress = Math.min(100, Math.round((processedCount / pmids.length) * 100));
-                            const elapsedTime = (Date.now() - startTime) / 1000; // Time in seconds
+                            const elapsedTime = (Date.now() - startTime) / 1000;
                             const minutes = Math.floor(elapsedTime / 60);
                             const seconds = Math.floor(elapsedTime % 60);
                             const timeFormatted = `${minutes}m ${seconds}s`;
-    
-                            // Update progress bar with percentage and elapsed time
                             progressBar.style.width = `${progress}%`;
-                            progressBar.textContent = `${progress}% - ${timeFormatted}`; // Show both percentage and time
-                        } catch (error) {
-                            console.error(`Error fetching PMID ${pmid}:`, error);
+                            progressBar.textContent = `${progress}% - ${timeFormatted}`;
                         }
                     })()
                 );
     
-                // Limit parallel requests
                 if (batchPromises.length >= maxParallel) {
-                    await Promise.all(batchPromises);  // Wait for all promises to resolve before continuing
+                    await Promise.all(batchPromises);
                     batchPromises.length = 0;
                 }
             }
     
-            // Process any remaining promises in the batch
             if (batchPromises.length > 0) {
                 await Promise.all(batchPromises);
             }
         }
     
-        return results;  // Return the results after all articles are fetched
+        if (failedPMIDs.length > 0) {
+            addProgressMessage(`⚠️ Failed to fetch ${failedPMIDs.length} article(s).`, "warning");
+            console.warn('Failed PMIDs:', failedPMIDs);
+            addProgressMessage(`PMID(s) of article(s) not fetched: ${failedPMIDs.join(', ')}`, "warning");
+        }
+        
+        const finalElapsedTime = (Date.now() - startTime) / 1000;
+        const finalMinutes = Math.floor(finalElapsedTime / 60);
+        const finalSeconds = Math.floor(finalElapsedTime % 60);
+        const finalTimeFormatted = `${finalMinutes}m ${finalSeconds}s`;
+        
+        progressBar.style.width = `100%`;
+        setTimeout(() => {
+            progressBar.textContent = `100% - Completed in ${finalTimeFormatted}`;
+        }, 0);  // This ensures DOM update happens after style width change
+
+        // Reset all input fields to default
+        document.getElementById("apiKey").value = "";
+        document.getElementById("searchQuery").value = "";
+        document.getElementById("startYear").value = "";
+        document.getElementById("endYear").value = "";
+        document.getElementById("parallelRequests").value = "5";
+        document.getElementById("outputBaseName").value = "pubmed_results";
+
+        // Reset checkboxes to checked
+        document.getElementById("exportCSV").checked = true;
+        document.getElementById("exportJSON").checked = true;
+        document.getElementById("exportBib").checked = true;
+
+
+
+        
+        return results;
+        
     }
+    
     
     async function fetchArticleDetails(apiKey, pmid) {
         const params = new URLSearchParams({
