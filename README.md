@@ -95,6 +95,18 @@ This tool is especially helpful for researchers, students, and educators who nee
 
 ---
 
+## Screenshots of PubMedXport
+
+### Screenshot 1
+![Screenshot 1](https://raw.githubusercontent.com/drmyo/pubmedxport/main/screenshots/screenshot1.jpg)
+### Screenshot 2
+![Screenshot 2](https://raw.githubusercontent.com/drmyo/pubmedxport/main/screenshots/screenshot2.jpg)
+### Screenshot 3
+![Screenshot 3](https://raw.githubusercontent.com/drmyo/pubmedxport/main/screenshots/screenshot3.jpg)
+### Screenshot 4
+![Screenshot 4](https://raw.githubusercontent.com/drmyo/pubmedxport/main/screenshots/screenshot4.jpg)
+
+
 ## ⚡Disclaimer:
 Generative AI tools, including ChatGPT and GitHub Copilot, were used to assist with coding and troubleshooting.
 The design, development, and final testing of this tool were led and completed by the author.
