@@ -19,7 +19,7 @@ document.addEventListener('DOMContentLoaded', function() {
         progressBar.style.width = '0%';
         progressBar.textContent = '0%';
     
-        // Disable all user interactions (buttons, inputs, checkboxes)
+        // Disable all user interactions (buttons, inputs)
         setFormEnabled(false);
 
     
@@ -31,9 +31,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const searchQuery = document.getElementById('searchQuery').value.trim();
         const startYear = document.getElementById('startYear').value.trim();
         const endYear = document.getElementById('endYear').value.trim();
-        const exportCSV = document.getElementById('exportCSV').checked;
-        const exportJSON = document.getElementById('exportJSON').checked;
-        const exportBib = document.getElementById('exportBib').checked;
     
         // Validate inputs
         if (!apiKey) return showErrorAndReset("❌ No API key was entered.");
@@ -82,13 +79,21 @@ document.addEventListener('DOMContentLoaded', function() {
             addProgressMessage(`✅ Successfully fetched ${articles.length.toLocaleString()} articles.`, "success");
             addProgressMessage("⏳ Exporting results...", "info");
         
-            const exports = [];
-            if (exportCSV) exports.push({ format: 'csv', extension: '.csv' });
-            if (exportJSON) exports.push({ format: 'json', extension: '.json' });
-            if (exportBib) exports.push({ format: 'bib', extension: '.bib' });
+            const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
+            const baseFilename = 'pubmed_results_' + timestamp;  // Or use your preferred naming pattern
+
+            const exports = [
+                { format: 'csv', extension: '.csv' },
+                { format: 'json', extension: '.json' },
+                { format: 'bib', extension: '.bib' }
+              ];
     
             for (const exp of exports) {
-                const filename = baseFilename + exp.extension;
+                const defaultFilenames = {
+                    csv: 'pubmed_results.csv',
+                    json: 'pubmed_results.json',
+                    bib: 'pubmed_results.bib'
+                };
                 const content = exportData(articles, exp.format);
                 const blob = new Blob([content], { type: 'text/plain' });
                 const url = URL.createObjectURL(blob);
@@ -98,10 +103,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 link.onclick = function() {
                     const a = document.createElement('a');
                     a.href = url;
-                    a.download = filename;
+                    a.download = defaultFilenames[exp.format];  // Use simple default name
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
+                    setTimeout(() => URL.revokeObjectURL(url), 100);
                 };
                 link.innerHTML = `Download ${exp.format.toUpperCase()}`;
                 downloadLinks.appendChild(link);
@@ -202,9 +208,6 @@ document.addEventListener('DOMContentLoaded', function() {
             'searchQuery',
             'startYear',
             'endYear',
-            'exportCSV',
-            'exportJSON',
-            'exportBib',
             'fetchButton'
         ];
     
@@ -220,9 +223,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("startYear").value = "";
         document.getElementById("endYear").value = "";
         document.getElementById("parallelRequests").value = "5";
-        document.getElementById("exportCSV").checked = true;
-        document.getElementById("exportJSON").checked = true;
-        document.getElementById("exportBib").checked = true;
     }
     
     
@@ -299,13 +299,10 @@ document.addEventListener('DOMContentLoaded', function() {
             failedLink.onclick = function() {
                 const a = document.createElement('a');
                 a.href = failedPmidsUrl;
-                a.download = 'failed_pmids.txt';  // Simple filename since we don't have baseFilename here
+                a.download = 'failed_pmids.txt';  // Simple default name
                 document.body.appendChild(a);
                 a.click();
-                setTimeout(() => {
-                    document.body.removeChild(a);
-                    URL.revokeObjectURL(failedPmidsUrl);
-                }, 100);
+                document.body.removeChild(a);
             };
             failedLink.innerHTML = 'Download Failed PMIDs';
             downloadLinksElement.appendChild(failedLink);
@@ -329,14 +326,6 @@ document.addEventListener('DOMContentLoaded', function() {
         document.getElementById("startYear").value = "";
         document.getElementById("endYear").value = "";
         document.getElementById("parallelRequests").value = "5";
-
-        // Reset checkboxes to checked
-        document.getElementById("exportCSV").checked = true;
-        document.getElementById("exportJSON").checked = true;
-        document.getElementById("exportBib").checked = true;
-
-
-
         
         return results;
         
