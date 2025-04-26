@@ -98,13 +98,13 @@ This tool is especially helpful for researchers, students, and educators who nee
 ## Screenshots of PubMedXport
 
 ### Screenshot 1
-![Screenshot 1](https://github.com/drmyo/pubmedxport/blob/main/screenshots/screenshot1.jpg)
+![Screenshot 1](https://github.com/drmyo/pubmedxport/blob/main/screenshots/1.jpg)
 ### Screenshot 2
-![Screenshot 2](https://github.com/drmyo/pubmedxport/blob/main/screenshots/screenshot2.jpg)
+![Screenshot 2](https://github.com/drmyo/pubmedxport/blob/main/screenshots/2.jpg)
 ### Screenshot 3
-![Screenshot 3](https://github.com/drmyo/pubmedxport/blob/main/screenshots/screenshot3.jpg)
+![Screenshot 3](https://github.com/drmyo/pubmedxport/blob/main/screenshots/3.jpg)
 ### Screenshot 4
-![Screenshot 4](https://github.com/drmyo/pubmedxport/blob/main/screenshots/screenshot4.jpg)
+![Screenshot 4](https://github.com/drmyo/pubmedxport/blob/main/screenshots/4.jpg)
 
 
 ## ⚡Disclaimer:
