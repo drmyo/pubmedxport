@@ -1,0 +1,11 @@
+cff-version: 1.1.0
+message: "If you use this software, please cite it as below."
+authors:
+- family-names: THA
+  given-names: MYO KYI
+orcid: https://orcid.org/0000-0003-3973-2412
+- family-name: KHIN
+  given-name: NILAR
+title:PubMedXport: Export PubMed Metadata and Abstracts to CSV, JSON, and BibTeX
+version: 1.0.1
+date-released: 2025-04-27
