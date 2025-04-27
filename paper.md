@@ -40,7 +40,6 @@ long-description: |
   - JSON format is unavailable.
   - BibTeX citations require manual generation.
   - Abstracts are supplied only as unstructured text files.
-  - Batch exports are cumbersome.
 
   While third-party tools exist, they often require local installation or complex workflows. PubMedXport overcomes these limitations by offering a browser-based, user-friendly platform for exporting PubMed search results, including abstracts, in multiple formats.
 
