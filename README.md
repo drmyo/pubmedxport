@@ -1,6 +1,6 @@
-# 📚 PubMed Metadata eXporter (`PubMedXport`)
+# 📚 PubMedXport: Export PubMed Metadata and Abstracts to CSV, JSON, and BibTeX
 
-**Structured Export of PubMed Metadata including Abstracts to CSV, JSON, and BibTeX**
+**Structured export of PubMed data for systematic reviews, meta-analyses, bibliometric studies, and educational research.**
 
 <hr style="border: 1px solid blue;">
 
@@ -16,6 +16,8 @@
 - Save any **failed PMIDs** for manual review
 
 It's ideal for researchers performing **systematic reviews**, **meta-analyses**, or **evidence gathering** during the early phases of a literature search.
+
+Keywords: PubMed export, PubMed abstracts, systematic review tool, meta-analysis tool, structured bibliographic data, CSV export, JSON export, BibTeX export, evidence synthesis, bibliometric analysis
 
 <hr style="border: 1px solid green;">
 
@@ -165,7 +167,6 @@ This tool is especially helpful for researchers, students, and educators who nee
 ### Result with no failed PMID
 <img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/1.jpg?raw=true" alt="Screenshot 1" width="600">
 
-<hr style="border: 0.5px solid grey;">
 
 ### Result with 1 failed PMID
 - Number of Parallel Requests = 8, Found 704 articles, Failed to fetch 54 article(s) and Successfully fetched 650 articles.
