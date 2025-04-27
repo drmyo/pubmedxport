@@ -7,6 +7,7 @@ authors:
     orcid: "https://orcid.org/0000-0003-3973-2412"
   - name: "Nilar Khin"
     affiliation: "MAHSA University, Malaysia"
+    email: "nilarkhin@mahsa.edu.my"
     orcid: "https://orcid.org/0000-0002-9173-0337"
 date: "2025-04-27"
 journal: "JOSS"
