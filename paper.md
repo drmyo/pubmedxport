@@ -76,8 +76,8 @@ long-description: |
 
   **Development**
 
-  PubMedXport was developed through a hybrid approach, combining human expertise with AI assistance (ChatGPT, GitHub Copilot) for coding and troubleshooting. The authors conceptualized the tool, selected its features, conducted extensive testing, and ensured user-centered design, illustrating the potential of AI-augmented development for research tools.
-
+  PubMedXport was created using a hybrid approach that blended human expertise with free AI tools (ChatGPT, GitHub Copilot, and DeepSeek) for coding and troubleshooting. The authors designed the concept, chose the features, performed extensive testing, and focused on user-centered design, demonstrating how AI-augmented development can enhance research tool creation.
+  
   **Limitations and Future Directions**
 
   While PubMedXport extends PubMed's capabilities, it remains dependent on PubMed's data structures and API limits.
