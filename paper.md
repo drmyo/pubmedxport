@@ -1,4 +1,3 @@
----
 title: "PubMedXport: Export PubMed Metadata and Abstracts to CSV, JSON, and BibTeX"
 authors:
   - name: "Myo Kyi Tha"
