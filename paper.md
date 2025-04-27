@@ -9,11 +9,11 @@ tags:
   - bibliometrics
 authors:
   - name: Myo Kyi Tha
-    orcid: 0000-0003-3973-2412"
+    orcid: 0000-0003-3973-2412
     equal-contrib: true
     affiliation: 1
   - name: Nilar Khin
-    orcid: 0000-0002-9173-0337"
+    orcid: 0000-0002-9173-0337
     equal-contrib: true
     affiliation: 1
 affiliations:
