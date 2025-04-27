@@ -2,13 +2,11 @@
 title: "PubMedXport: Export PubMed Metadata and Abstracts to CSV, JSON, and BibTeX"
 authors:
   - name: "Myo Kyi Tha"
-    affiliation: "MAHSA University, Malaysia"
-    email: "ktmyo@mahsa.edu.my"
     orcid: "https://orcid.org/0000-0003-3973-2412"
-  - name: "Nilar Khin"
     affiliation: "MAHSA University, Malaysia"
-    email: "nilarkhin@mahsa.edu.my"
+  - name: "Nilar Khin"
     orcid: "https://orcid.org/0000-0002-9173-0337"
+    affiliation: "MAHSA University, Malaysia"
 date: "2025-04-27"
 journal: "JOSS"
 keywords:
