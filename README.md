@@ -162,14 +162,27 @@ This tool is especially helpful for researchers, students, and educators who nee
 
 ## Screenshots of PubMedXport
 
-### Screenshot 1
+### Result with no failed PMID
 <img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/1.jpg?raw=true" alt="Screenshot 1" width="600">
 
-### Screenshot 2
+### Result with 1 failed PMID
+- Download Failed PMIDs Button
+- Number of Parallel Requests = 8, Found 704 articles, Failed to fetch 54 article(s) and Successfully fetched 650 articles.
+- Lesser Number of Parallel Requests and Smaller Batches improves the results.
+
 <img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/2.jpg?raw=true" alt="Screenshot 2" width="600">
 
-### Screenshot 3
+### Result on iOS
 <img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/3.JPG?raw=true" alt="Screenshot 3" width="600">
+
+### CSV Output
+<img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/4.JPG?raw=true" alt="Screenshot 4" width="600">
+
+### JSON Output
+<img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/5.JPG?raw=true" alt="Screenshot 5" width="600">
+
+### BibTeX Output
+<img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/6.JPG?raw=true" alt="Screenshot 6" width="600">
 
 
 <hr style="border: 1px solid green;">
