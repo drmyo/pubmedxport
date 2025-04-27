@@ -4,9 +4,6 @@ tags:
   - software
   - PubMed
   - data export
-  - systematic reviews
-  - meta-analyses
-  - bibliometrics
 authors:
   - name: Myo Kyi Tha
     orcid: 0000-0003-3973-2412
@@ -19,6 +16,7 @@ affiliations:
     index: "1"
 date: 2025-04-27
 journal: JOSS
+---
 
 abstract: |
   Efficient extraction of structured metadata from biomedical literature is critical for systematic reviews, meta-analyses, and bibliometric studies. PubMed, while central to biomedical research, offers limited export capabilities. We present PubMedXport, a web-based tool that enables users to search PubMed and export results, including abstracts, in CSV, JSON, and BibTeX formats. Featuring an intuitive interface, customizable queries, parallel processing, and error reporting, PubMedXport streamlines data retrieval for systematic reviews, meta-analyses, and educational purposes. Developed through a combination of human expertise and AI-assisted coding, it exemplifies the accelerating role of AI in research tool development.
