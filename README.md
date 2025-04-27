@@ -165,6 +165,7 @@ This tool is especially helpful for researchers, students, and educators who nee
 ### Result with no failed PMID
 <img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/1.jpg?raw=true" alt="Screenshot 1" width="600">
 
+<hr style="border: 0.5px solid grey;">
 
 ### Result with 1 failed PMID
 - Number of Parallel Requests = 8, Found 704 articles, Failed to fetch 54 article(s) and Successfully fetched 650 articles.
