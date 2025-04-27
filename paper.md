@@ -25,6 +25,8 @@ long-description: |
   Efficient literature searching underpins evidence-based practice. PubMed, operated by the U.S. National Library of Medicine, offers robust search capabilities but limited export functionality: abstracts are excluded from CSVs, structured formats like JSON are unavailable, and BibTeX entries must be manually generated. Abstracts are only available as plain, unstructured text, hindering efficient data use.
   PubMedXport addresses these gaps through a lightweight, browser-based application that retrieves full metadata, including abstracts, and exports results in structured formats without requiring installation. Supporting custom queries, year filtering, parallel processing, and error reporting, PubMedXport facilitates systematic reviews, meta-analyses, and educational research.
 
+---
+
   **Background**
   PubMed provides free, high-quality access to MEDLINE and other biomedical resources, distinguishing itself from subscription-based platforms like Scopus and Web of Science. Despite its powerful search capabilities, its data export options are constrained, especially for structured or large-scale computational workflows. Tools that extend PubMed's export features are needed to meet the growing demands of systematic reviews and computational analysis.
 
@@ -93,4 +95,3 @@ long-description: |
   **References**
   1. National Library of Medicine. PubMed Overview. Available at: [https://pubmed.ncbi.nlm.nih.gov/about/](https://pubmed.ncbi.nlm.nih.gov/about/) 
   2. National Center for Biotechnology Information (NCBI). E-utilities API Documentation. Available at: [https://www.ncbi.nlm.nih.gov/books/NBK25500/](https://www.ncbi.nlm.nih.gov/books/NBK25500/)
----
