@@ -168,6 +168,9 @@ This tool is especially helpful for researchers, students, and educators who nee
 ### Screenshot 2
 <img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/2.jpg?raw=true" alt="Screenshot 2" width="600">
 
+### Screenshot 3
+<img src="https://github.com/drmyo/pubmedxport/blob/main/screenshots/2.jpg?raw=true" alt="Screenshot 3" width="600">
+
 
 <hr style="border: 1px solid green;">
 
