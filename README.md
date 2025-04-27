@@ -110,7 +110,7 @@ Example for specific date search:
 | 10 | Bronchiolitis[Title/Abstract] AND corticosteroids[Title/Abstract] | 1809-2025 | 575 | 1m 11s | 72 |
 | 10 | Bronchiolitis[Title/Abstract] | 2020-2025 | 3192 | 12m 24s | 16 |
 
-> **Note**: Dividing large searches into smaller batches improves success rates.
+> **Note**: Dividing large searches into smaller batches and keeping the number of parallel requests around 5 improves success rates.
 
 ---
 
