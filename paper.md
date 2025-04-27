@@ -10,13 +10,13 @@ tags:
 authors:
   - name: Myo Kyi Tha
     orcid: 0000-0003-3973-2412
-    affiliation: 1
+    affiliation: "1"
   - name: Nilar Khin
     orcid: 0000-0002-9173-0337
-    affiliation: 1
+    affiliation: "1"
 affiliations:
   - name: MAHSA University, Malaysia
-    index: 1
+    index: "1"
 date: 2025-04-27
 journal: JOSS
 
