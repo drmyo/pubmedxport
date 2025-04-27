@@ -1,4 +1,5 @@
 # 📚 PubMedXport: Export PubMed Metadata and Abstracts to CSV, JSON, and BibTeX
+[![DOI](https://zenodo.org/badge/972718324.svg)](https://doi.org/10.5281/zenodo.15289544)
 
 **Structured export of PubMed data for systematic reviews, meta-analyses, bibliometric studies, and educational research.**
 
