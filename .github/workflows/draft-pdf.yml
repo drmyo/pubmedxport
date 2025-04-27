@@ -2,7 +2,7 @@ name: Draft PDF
 on:
   push:
     paths:
-      - paper.md                   # Now watches root/paper.md
+      - paper.md
       - .github/workflows/draft-pdf.yml
 
 jobs:
@@ -17,10 +17,9 @@ jobs:
         with:
           journal: joss
           paper-path: paper.md
-          output-path: paper.pdf   # Explicit output path
 
-      - name: Upload
+      - name: Upload PDF
         uses: actions/upload-artifact@v4
         with:
           name: paper
-          path: paper.pdf          # Matches output-path above
+          path: paper.pdf
