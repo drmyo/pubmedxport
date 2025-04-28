@@ -4,6 +4,7 @@ tags:
   - software
   - PubMed
   - data export
+  - biomedical
 authors:
   - name: Myo Kyi Tha
     orcid: 0000-0003-3973-2412
