@@ -15,6 +15,7 @@ authors:
 affiliations:
   - name: MAHSA University, Malaysia
     index: "1"
+    ror: 00p43ne90
 date: 2025-04-27
 journal: JOSS
 ---
