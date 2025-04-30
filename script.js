@@ -206,27 +206,29 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${params}`);
             const text = await response.text();
-            
+        
             if (!response.ok) {
-                throw new Error('Invalid API Key or Network error. Refresh the browser and try again.');
+                throw new Error('Failed to reach NCBI server. Please check your network connection and try again.');
             }
-    
+        
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(text, "text/xml");
+        
             const error = xmlDoc.querySelector('ERROR');
             if (error) {
-                throw new Error('Invalid API Key or Network error. Refresh the browser and try again.');
+                throw new Error('NCBI API returned an error. Please verify your API key and parameters.');
             }
-    
+        
             const idElements = xmlDoc.querySelectorAll('IdList Id');
             if (idElements.length === 0) {
-                return [];
+                throw new Error('No results found for the given search query.');
             }
-    
+        
             return Array.from(idElements).map(el => el.textContent);
+        
         } catch (error) {
             console.error('Search error:', error);
-            throw new Error('Invalid API Key or Network error. Refresh the browser and try again.');
+            throw new Error(error.message || 'An unexpected error occurred. Please try again.');
         }
     }
     
