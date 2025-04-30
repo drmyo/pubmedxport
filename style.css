@@ -59,9 +59,9 @@ body {
 
 #downloadLinks {
     display: flex;
-    flex-direction: column; /* Stack buttons vertically */
-    align-items: center; /* 👈 This centers the buttons horizontally */
-    gap: 10px; /* Adds space between buttons */
+    flex-direction: column; 
+    align-items: center; 
+    gap: 10px; 
 }
 
 .download-button {
@@ -72,9 +72,9 @@ body {
     cursor: pointer;
     font-size: 16px;
     border-radius: 5px;
-    min-width: 200px; /* Set a minimum width */
-    max-width: 300px; /* Set a maximum width */
-    width: 100%; /* Make all buttons take the full width available within the min/max range */
+    min-width: 200px; 
+    max-width: 300px; 
+    width: 100%; 
 }
 
 .download-button:hover {
@@ -83,11 +83,11 @@ body {
 
 
 .download-link.json {
-    min-width: 230px; /* Adjust this to match the width of the largest button */
+    min-width: 230px; 
 }
 
 
-/* Style for the failed PMIDs download button */
+
 .download-button.failed-pmids {
     background-color: #ffebee;
     border-color: #ffcdd2;
@@ -98,7 +98,7 @@ body {
     background-color: #ffcdd2;
 }
 
-/* Optional: Add an icon to make it more noticeable */
+
 .download-button.failed-pmids::before {
     content: "⚠️ ";
 }
@@ -116,7 +116,7 @@ body {
     content: "📚📝 ";
 }
 
-/* Spinner fallback (in your style.css) */
+
 .spinner {
     margin-left: 0.5rem;
     display: inline-block;
@@ -130,7 +130,7 @@ body {
 }
 
 .spinner::before {
-    content: '\f110'; /* Font Awesome spinner fallback */
+    content: '\f110'; 
     font-family: "Font Awesome 6 Free";
     font-weight: 900;
     animation: spin 1s linear infinite;
