@@ -21,8 +21,6 @@ document.addEventListener('DOMContentLoaded', function() {
     
         // Disable all user interactions (buttons, inputs)
         setFormEnabled(false);
-
-    
         spinner.style.display = 'inline-block';
     
         // Get input values
@@ -32,20 +30,34 @@ document.addEventListener('DOMContentLoaded', function() {
         const startYear = document.getElementById('startYear').value.trim();
         const endYear = document.getElementById('endYear').value.trim();
     
-        // Validate inputs
-        if (!apiKey) return showErrorAndReset("❌ No API key was entered. Refresh the browser and try again.");
-        if (parallelRequests < 3 || parallelRequests > 10) return showErrorAndReset("❌ Number of parallel requests must be between 3 and 10. Refresh the browser and try again.");
-        if (!searchQuery) return showErrorAndReset("❌ No search query provided. Refresh the browser and try again.");
-        if (startYear && !/^\d{4}$/.test(startYear)) return showErrorAndReset("❌ Invalid start year format. Please use YYYY. Refresh the browser and try again.");
-        if (endYear && !/^\d{4}$/.test(endYear)) return showErrorAndReset("❌ Invalid end year format. Please use YYYY. Refresh the browser and try again.");
+        // Validate inputs - NEW IMPROVED ORDER
+        if (!apiKey) return showErrorAndReset("❌ Please enter a PubMed API key.");
+        
+        // Validate API key first
+        addProgressMessage("🔍 Validating API key...", "info");
+        try {
+            const isValid = await validateApiKey(apiKey);
+            if (!isValid) {
+                return showErrorAndReset("❌ Invalid API key. Please check your API key and try again.");
+            }
+            addProgressMessage("✅ API key is valid.", "success");
+        } catch (error) {
+            return showErrorAndReset("❌ Error validating API key. Please check your network connection and try again.");
+        }
+    
+        // Then validate other inputs
+        if (!searchQuery) return showErrorAndReset("❌ Please enter a search query.");
+        if (parallelRequests < 3 || parallelRequests > 10) return showErrorAndReset("❌ Number of parallel requests must be between 3 and 10.");
+        if (startYear && !/^\d{4}$/.test(startYear)) return showErrorAndReset("❌ Invalid start year format. Please use YYYY.");
+        if (endYear && !/^\d{4}$/.test(endYear)) return showErrorAndReset("❌ Invalid end year format. Please use YYYY.");
     
         const startYearInt = startYear ? parseInt(startYear) : null;
         const endYearInt = endYear ? parseInt(endYear) : null;
         const currentYear = new Date().getFullYear();
     
-        if (startYearInt && startYearInt < 1809) return showErrorAndReset("❌ Start year must be 1809 or later. Refresh the browser and try again.");
-        if (endYearInt && endYearInt > currentYear) return showErrorAndReset(`❌ End year cannot be in the future (${currentYear}). Refresh the browser and try again.`);
-        if (startYearInt && endYearInt && endYearInt < startYearInt) return showErrorAndReset("❌ End year cannot be earlier than start year. Refresh the browser and try again.");
+        if (startYearInt && startYearInt < 1809) return showErrorAndReset("❌ Start year must be 1809 or later.");
+        if (endYearInt && endYearInt > currentYear) return showErrorAndReset(`❌ End year cannot be in the future (${currentYear}).`);
+        if (startYearInt && endYearInt && endYearInt < startYearInt) return showErrorAndReset("❌ End year cannot be earlier than start year.");
     
         addProgressMessage("✅ Starting PubMed search...", "info");
     
@@ -133,6 +145,30 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
     
+    async function validateApiKey(apiKey) {
+        try {
+            const params = new URLSearchParams({
+                db: 'pubmed',
+                term: 'test',
+                retmax: 1,
+                api_key: apiKey
+            });
+    
+            const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/esearch.fcgi?${params}`);
+            const text = await response.text();
+            
+            if (!response.ok) {
+                return false;
+            }
+    
+            const parser = new DOMParser();
+            const xmlDoc = parser.parseFromString(text, "text/xml");
+            return !xmlDoc.querySelector('ERROR');
+        } catch (error) {
+            return false;
+        }
+    }
+
 
     function addProgressMessage(message, type) {
         const messageDiv = document.createElement('div');
