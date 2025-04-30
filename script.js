@@ -30,10 +30,9 @@ document.addEventListener('DOMContentLoaded', function() {
         const startYear = document.getElementById('startYear').value.trim();
         const endYear = document.getElementById('endYear').value.trim();
     
-        // Validate inputs - NEW IMPROVED ORDER
+        // Input validation
         if (!apiKey) return showErrorAndReset("❌ Please enter a PubMed API key.");
         
-        // Validate API key first
         addProgressMessage("🔍 Validating API key...", "info");
         try {
             const isValid = await validateApiKey(apiKey);
@@ -45,9 +44,8 @@ document.addEventListener('DOMContentLoaded', function() {
             return showErrorAndReset("❌ Error validating API key. Please check your network connection and try again.");
         }
     
-        // Then validate other inputs
-        if (!searchQuery) return showErrorAndReset("❌ Please enter a search query.");
         if (parallelRequests < 3 || parallelRequests > 10) return showErrorAndReset("❌ Number of parallel requests must be between 3 and 10.");
+        if (!searchQuery) return showErrorAndReset("❌ Please enter a search query.");
         if (startYear && !/^\d{4}$/.test(startYear)) return showErrorAndReset("❌ Invalid start year format. Please use YYYY.");
         if (endYear && !/^\d{4}$/.test(endYear)) return showErrorAndReset("❌ Invalid end year format. Please use YYYY.");
     
@@ -331,7 +329,7 @@ document.addEventListener('DOMContentLoaded', function() {
             failedLink.onclick = function() {
                 const a = document.createElement('a');
                 a.href = failedPmidsUrl;
-                a.download = 'failed_pmids.txt';  // Simple default name
+                a.download = 'failed_pmids.txt';  // Default name
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -350,8 +348,8 @@ document.addEventListener('DOMContentLoaded', function() {
         progressBar.style.width = `100%`;
         setTimeout(() => {
             progressBar.textContent = `100% - Completed in ${finalTimeFormatted}`;
-        }, 0);  // This ensures DOM update happens after style width change
-
+        }, 0);  
+        
         // Reset all input fields to default
         document.getElementById("apiKey").value = "";
         document.getElementById("searchQuery").value = "";
@@ -409,9 +407,9 @@ document.addEventListener('DOMContentLoaded', function() {
         
             let country = '';
             if (affiliations.length > 0) {
-                const lastAffil = affiliations[0]; // or loop to find one with a country
+                const lastAffil = affiliations[0]; 
                 const parts = lastAffil.split(/[,;]+/);
-                country = parts[parts.length - 1].trim().replace(/\.$/, ''); // Remove trailing period
+                country = parts[parts.length - 1].trim().replace(/\.$/, ''); 
             }
         
 
@@ -486,9 +484,9 @@ document.addEventListener('DOMContentLoaded', function() {
             
             // Escape special BibTeX characters in the abstract
             const abstract = article.Abstract
-                .replace(/[{}]/g, '')          // Remove curly braces
-                .replace(/\\/g, '\\\\')        // Escape backslashes
-                .replace(/"/g, '\\"')          // Escape quotes
+                .replace(/[{}]/g, '')    
+                .replace(/\\/g, '\\\\')  
+                .replace(/"/g, '\\"')    
                 .replace(/&/g, '\\&')
                 .replace(/%/g, '\\%')
                 .replace(/\$/g, '\\$')
