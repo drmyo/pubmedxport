@@ -443,7 +443,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     const affil = affiliations[i].toLowerCase();
                     
                     for (const entry of countryList) {
-                        const patterns = [entry.name.toLowerCase(), ...(entry.alt || []).map(a => a.toLowerCase())];
+                        const patterns = [entry.name.toLowerCase(), ...(entry.aliases || []).map(a => a.toLowerCase())];
                         
                         for (const pattern of patterns) {
                             if (affil.includes(pattern)) {
