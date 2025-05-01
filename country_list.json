@@ -1098,10 +1098,10 @@
     "aliases": ["United Arab Emirates"]
     },
     {
-    "name": "United Kingdom of Great Britain and Northern Ireland",
+    "name": "United Kingdom",
     "alpha2": "GB",
     "alpha3": "GBR",
-    "aliases": ["United Kingdom", "UK"]
+    "aliases": ["UK"]
     },
     {
     "name": "United States of America",
