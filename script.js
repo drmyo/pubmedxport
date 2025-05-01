@@ -1,24 +1,44 @@
-document.addEventListener('DOMContentLoaded', function() {
+// Country list checked against .json
+// First author in one field and other authors in another field
+// First author country in one field and other author countries in another field
+
+document.addEventListener('DOMContentLoaded', async function() {
     const fetchButton = document.getElementById('fetchButton');
     const progressSection = document.getElementById('progressSection');
     const progressMessages = document.getElementById('progressMessages');
-    
     const downloadLinks = document.getElementById('downloadLinks');
     const errorSection = document.getElementById('errorSection');
-
-   
     const progressBar = document.getElementById('progressBar');
     const spinner = document.getElementById('spinner');
+
+    // 🔸 Load standardized country list
+    let countryList = [];
+    try {
+        const response = await fetch('country_list.json');
+        if (!response.ok) throw new Error('Failed to load country list.');
+        countryList = await response.json();
+    } catch (error) {
+        showError(`❌ Error loading country list: ${error.message}`);
+        return;
+    }
+
+    let currentBlobUrls = {};
 
     fetchButton.addEventListener('click', async function() {
         // Reset UI
         progressMessages.innerHTML = '';
-        downloadLinks.innerHTML = '';
+        //downloadLinks.innerHTML = '';
         errorSection.style.display = 'none';
         progressSection.style.display = 'block';
         progressBar.style.width = '0%';
         progressBar.textContent = '0%';
+
+        document.querySelectorAll('.download-button').forEach(btn => btn.remove());
     
+        // Clean up previous blob URLs at start of new search
+        Object.values(currentBlobUrls).forEach(url => URL.revokeObjectURL(url));
+        currentBlobUrls = {};
+        
         // Disable all user interactions (buttons, inputs)
         setFormEnabled(false);
         spinner.style.display = 'inline-block';
@@ -90,38 +110,39 @@ document.addEventListener('DOMContentLoaded', function() {
             addProgressMessage("⏳ Exporting results...", "info");
         
             const timestamp = new Date().toISOString().replace(/[:.]/g, '-').slice(0, 19);
-            const baseFilename = 'pubmed_results_' + timestamp;  // Or use your preferred naming pattern
+            const baseFilename = 'pubmed_results_' + timestamp;  // Or use user preferred filename
 
             const exports = [
                 { format: 'csv', extension: '.csv' },
                 { format: 'json', extension: '.json' },
                 { format: 'bib', extension: '.bib' }
-              ];
+            ];
     
             for (const exp of exports) {
                 const defaultFilenames = {
-                    csv: 'pubmed_results.csv',
-                    json: 'pubmed_results.json',
-                    bib: 'pubmed_results.bib'
+                    csv: `pubmed_results_${timestamp}.csv`,
+                    json: `pubmed_results_${timestamp}.json`,
+                    bib: `pubmed_results_${timestamp}.bib`
                 };
                 const content = exportData(articles, exp.format);
                 const blob = new Blob([content], { type: 'text/plain' });
-                const url = URL.createObjectURL(blob);
+                currentBlobUrls[exp.format] = URL.createObjectURL(blob);
     
                 const link = document.createElement('button');
                 link.className = `download-button download-link ${exp.format}`;
                 link.onclick = function() {
                     const a = document.createElement('a');
-                    a.href = url;
-                    a.download = defaultFilenames[exp.format];  // Use simple default name
+                    a.href = currentBlobUrls[exp.format];
+                    a.download = defaultFilenames[exp.format];
                     document.body.appendChild(a);
                     a.click();
                     document.body.removeChild(a);
-                    setTimeout(() => URL.revokeObjectURL(url), 100);
+                    // No URL.revokeObjectURL here - keep it available for re-downloads
                 };
                 link.innerHTML = `Download ${exp.format.toUpperCase()}`;
                 downloadLinks.appendChild(link);
             }
+
     
             addProgressMessage("✅ All operations completed successfully!", "success");
             progressBar.style.width = '100%';
@@ -283,11 +304,11 @@ document.addEventListener('DOMContentLoaded', function() {
                             if (article) {
                                 results.push(article);
                             } else {
-                                failedPMIDs.push(pmid); // ← Track failure here
+                                failedPMIDs.push(pmid);
                             }
                         } catch (error) {
                             console.error(`Error fetching PMID ${pmid}:`, error);
-                            failedPMIDs.push(pmid); // ← And here too
+                            failedPMIDs.push(pmid); 
                         } finally {
                             processedCount++;
                             const progress = Math.min(100, Math.round((processedCount / pmids.length) * 100));
@@ -317,7 +338,6 @@ document.addEventListener('DOMContentLoaded', function() {
             console.warn('Failed PMIDs:', failedPMIDs);
             addProgressMessage(`PMID(s) of article(s) not fetched: ${failedPMIDs.join(', ')}`, "warning");
             
-            // Create a temporary button container if needed
             const tempContainer = document.createElement('div');
             tempContainer.style.display = 'none';
             document.body.appendChild(tempContainer);
@@ -375,56 +395,86 @@ document.addEventListener('DOMContentLoaded', function() {
         try {
             const response = await fetch(`https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi?${params}`);
             const text = await response.text();
-    
-            if (!response.ok) {
-                throw new Error('Invalid API Key or Network error');
-            }
+            if (!response.ok) throw new Error('Invalid API Key or Network error');
     
             const parser = new DOMParser();
             const xmlDoc = parser.parseFromString(text, "text/xml");
             const error = xmlDoc.querySelector('ERROR');
-            if (error) {
-                throw new Error('Invalid API Key or Network error');
-            }
+            if (error) throw new Error('Invalid API Key or Network error');
     
             const article = xmlDoc.querySelector('PubmedArticle');
-            if (!article) {
-                throw new Error('Invalid API Key or Network error');
-            }
+            if (!article) throw new Error('Invalid API Key or Network error');
     
             function safeExtract(selector, parent = article) {
                 const element = parent.querySelector(selector);
                 return element && element.textContent ? element.textContent.trim() : '';
             }
     
-            const authors = Array.from(article.querySelectorAll('AuthorList > Author')).map(author => {
+            // Extract all authors and separate first author from co-authors
+            const authorElements = Array.from(article.querySelectorAll('AuthorList > Author'));
+            let firstAuthor = '';
+            const coAuthors = [];
+            
+            authorElements.forEach((author, index) => {
                 const foreName = safeExtract('ForeName', author);
                 const lastName = safeExtract('LastName', author);
-                return `${foreName} ${lastName}`.trim();
-            }).filter(name => name).join(', ');
+                const fullName = `${foreName} ${lastName}`.trim();
+                
+                if (fullName) {
+                    if (index === 0) {
+                        firstAuthor = fullName;
+                    } else {
+                        coAuthors.push(fullName);
+                    }
+                }
+            });
     
             const affiliations = Array.from(article.querySelectorAll('AffiliationInfo > Affiliation'))
-            .map(el => el.textContent.trim())
-            .filter(Boolean);
-        
-            let country = '';
+                .map(el => el.textContent.trim())
+                .filter(Boolean);
+    
+            // Initialize country variables
+            let firstAuthorCountry = '';
+            const coAuthorCountries = new Set();
+    
             if (affiliations.length > 0) {
-                const lastAffil = affiliations[0]; 
-                const parts = lastAffil.split(/[,;]+/);
-                country = parts[parts.length - 1].trim().replace(/\.$/, ''); 
+                // Process all affiliations to find countries
+                for (let i = 0; i < affiliations.length; i++) {
+                    const affil = affiliations[i].toLowerCase();
+                    
+                    for (const entry of countryList) {
+                        const patterns = [entry.name.toLowerCase(), ...(entry.alt || []).map(a => a.toLowerCase())];
+                        
+                        for (const pattern of patterns) {
+                            if (affil.includes(pattern)) {
+                                if (i === 0) {
+                                    firstAuthorCountry = entry.name;
+                                } else {
+                                    coAuthorCountries.add(entry.name);
+                                }
+                                break; 
+                            }
+                        }
+                    }
+                }
             }
-        
 
-            const doiElement = Array.from(article.querySelectorAll('ArticleId')).find(el => 
+            coAuthorCountries.delete(firstAuthorCountry);
+    
+            const coAuthorCountriesString = Array.from(coAuthorCountries).map(c => `"${c}"`).join(', ');
+            
+            const coAuthorsString = coAuthors.join(', ');
+    
+            const doiElement = Array.from(article.querySelectorAll('ArticleId')).find(el =>
                 el.getAttribute('IdType') === 'doi' && el.textContent
             );
             const doi = doiElement ? `https://doi.org/${doiElement.textContent.trim()}` : '';
     
-            const abstractTexts = Array.from(article.querySelectorAll('AbstractText')).map(el => 
+            const abstractTexts = Array.from(article.querySelectorAll('AbstractText')).map(el =>
                 el.textContent.trim()
             ).filter(text => text).join(' ');
     
-            const publicationTypes = Array.from(article.querySelectorAll('PublicationType')).map(el => 
+            const publicationTypes = Array.from(article.querySelectorAll('PublicationType')).map(el =>
                 el.textContent.trim()
             ).filter(text => text).join(', ');
     
@@ -432,9 +482,11 @@ document.addEventListener('DOMContentLoaded', function() {
                 PMID: pmid,
                 Title: safeExtract('ArticleTitle'),
                 Journal: safeExtract('Journal > Title'),
-                Author: authors,
-                Country: country,
-                Year: safeExtract('PubDate > Year') || 
+                FirstAuthor: firstAuthor,
+                CoAuthors: coAuthorsString,
+                FirstAuthorCountry: firstAuthorCountry,
+                CoAuthorCountries: coAuthorCountriesString,
+                Year: safeExtract('PubDate > Year') ||
                       safeExtract('PubDate > MedlineDate').slice(0, 4) || '',
                 DOI: doi,
                 Volume: safeExtract('JournalIssue > Volume'),
@@ -442,12 +494,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 PublicationType: publicationTypes,
                 Abstract: abstractTexts 
             };
+            
         } catch (error) {
             console.error(`Error processing PMID ${pmid}:`, error);
             throw new Error('Invalid API Key or Network error');
         }
     }
-    
 
     function exportData(articles, format) {
         switch (format) {
@@ -476,39 +528,36 @@ document.addEventListener('DOMContentLoaded', function() {
         return [headers.join(','), ...rows].join('\n');
     }
 
-    function convertToBibTeX(articles) {
-        return articles.map(article => {
-            // Format authors with " and " separator
-            const authors = article.Author
-                .split(',')
-                .map(author => author.trim())
-                .join(' and ');
-            
-            // Escape special BibTeX characters in the abstract
-            const abstract = article.Abstract
-                .replace(/[{}]/g, '')    
-                .replace(/\\/g, '\\\\')  
-                .replace(/"/g, '\\"')    
-                .replace(/&/g, '\\&')
-                .replace(/%/g, '\\%')
-                .replace(/\$/g, '\\$')
-                .replace(/#/g, '\\#')
-                .replace(/_/g, '\\_');
-            
-            return `@article{${article.PMID},
-      title = {${article.Title}},
-      author = {${authors}},
-      country = {${article.Country}},
-      journal = {${article.Journal}},
-      year = {${article.Year}},
-      volume = {${article.Volume}},
-      issue = {${article.Issue}},
-      doi = {${article.DOI}},
-      abstract = {${abstract}},
-      publicationtype = {${article.PublicationType}},
-      pmid={${article.PMID}}
-    }`;
-        }).join('\n');
-    }
-
+function convertToBibTeX(articles) {
+    return articles.map(article => {
+        const authors = [article.FirstAuthor, ...article.CoAuthors.split(', ')]
+            .filter(a => a) 
+            .join(' and ');
+        
+        const abstract = article.Abstract
+            .replace(/[{}]/g, '')    
+            .replace(/\\/g, '\\\\')  
+            .replace(/"/g, '\\"')    
+            .replace(/&/g, '\\&')
+            .replace(/%/g, '\\%')
+            .replace(/\$/g, '\\$')
+            .replace(/#/g, '\\#')
+            .replace(/_/g, '\\_');
+        
+        return `@article{${article.PMID},
+            title = {${article.Title}},
+            author = {${authors}},
+            firstauthorcountry = {${article.FirstAuthorCountry}},
+            coauthorscountries = {${article.CoAuthorCountries}},
+            journal = {${article.Journal}},
+            year = {${article.Year}},
+            volume = {${article.Volume}},
+            issue = {${article.Issue}},
+            doi = {${article.DOI}},
+            abstract = {${abstract}},
+            publicationtype = {${article.PublicationType}},
+            pmid = {${article.PMID}}
+        }`;
+    }).join('\n');
+}
 });
