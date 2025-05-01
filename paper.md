@@ -49,6 +49,7 @@ long-description: |
 
   - **PubMed Search**: Custom keyword queries with optional year range filters.
   - **Data Retrieval**: Full metadata and abstract collection.
+  - **Author Country Extraction**: Extract country-level info for all authors (First author, and co-authors, if any, in separate fields - with duplications removed). 
   - **Export Options**: CSV (with abstracts), JSON (machine-readable), BibTeX (citation-ready).
   - **Parallel Requests**: Faster data retrieval through simultaneous API calls.
   - **Progress Tracking**: Real-time indicators during searches.
