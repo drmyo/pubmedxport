@@ -440,30 +440,38 @@ document.addEventListener('DOMContentLoaded', async function() {
             if (affiliations.length > 0) {
                 // Process all affiliations to find countries
                 for (let i = 0; i < affiliations.length; i++) {
-                    const affil = affiliations[i].toLowerCase();
-                    
+                    const affil = affiliations[i];  // No need to lowercase here anymore
+            
                     for (const entry of countryList) {
-                        const patterns = [entry.name.toLowerCase(), ...(entry.aliases || []).map(a => a.toLowerCase())];
-                        
+                        const patterns = [entry.name, ...(entry.aliases || [])];
+            
                         for (const pattern of patterns) {
-                            if (affil.includes(pattern)) {
+                            // Escape any regex special characters
+                            const escapedPattern = pattern.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+                            // Use word boundaries to prevent partial matches
+                            const regex = new RegExp(`\\b${escapedPattern}\\b`, 'i');
+            
+                            if (regex.test(affil)) {
                                 if (i === 0) {
                                     firstAuthorCountry = entry.name;
                                 } else {
                                     coAuthorCountries.add(entry.name);
                                 }
-                                break; 
+                                break;  // Stop checking other aliases for this entry
                             }
                         }
                     }
                 }
             }
+            
 
             coAuthorCountries.delete(firstAuthorCountry);
     
             const coAuthorCountriesString = Array.from(coAuthorCountries).map(c => `"${c}"`).join(', ');
             
             const coAuthorsString = coAuthors.join(', ');
+            const affiliationsString = affiliations.join('; ').replace(/"/g, '""');  
+
     
             const doiElement = Array.from(article.querySelectorAll('ArticleId')).find(el =>
                 el.getAttribute('IdType') === 'doi' && el.textContent
@@ -484,6 +492,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                 Journal: safeExtract('Journal > Title'),
                 FirstAuthor: firstAuthor,
                 CoAuthors: coAuthorsString,
+                Affiliations: affiliationsString,
                 FirstAuthorCountry: firstAuthorCountry,
                 CoAuthorCountries: coAuthorCountriesString,
                 Year: safeExtract('PubDate > Year') ||

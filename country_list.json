@@ -528,17 +528,17 @@
         "aliases": ["Kiribati"]
     },
     {
-        "name": "Korea, Democratic People's Republic of",
-        "alpha2": "KP",
-        "alpha3": "PRK",
-        "aliases": ["North Korea", "Democratic People's Republic of Korea"]
-    },
-    {
         "name": "Korea, Republic of",
         "alpha2": "KR",
         "alpha3": "KOR",
-        "aliases": ["South Korea", "Republic of Korea"]
+        "aliases": ["South Korea", "Republic of Korea", "Korea"]
     },
+    {
+        "name": "Korea, Democratic People's Republic of",
+        "alpha2": "KP",
+        "alpha3": "PRK",
+        "aliases": ["North Korea", "Democratic People's Republic of Korea", "DPRK"]
+    },  
     {
         "name": "Kuwait",
         "alpha2": "KW",
@@ -711,7 +711,13 @@
         "name": "Myanmar",
         "alpha2": "MM",
         "alpha3": "MMR",
-        "aliases": ["Myanmar", "Burma"]
+        "aliases": ["Myanmar"]
+    },
+    {
+        "name": "Burma",
+        "alpha2": "BM",
+        "alpha3": "BUR",
+        "aliases": ["Burma"]
     },
     {
         "name": "Namibia",
