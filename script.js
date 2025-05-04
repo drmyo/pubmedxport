@@ -1,4 +1,5 @@
-// Country list checked against .json
+// Country list checked against .json; Improved Korea
+// Parsing improvement .. UK, USA
 // First author in one field and other authors in another field
 // First author country in one field and other author countries in another field
 
@@ -438,7 +439,6 @@ document.addEventListener('DOMContentLoaded', async function() {
             const coAuthorCountries = new Set();
     
             if (affiliations.length > 0) {
-                // Process all affiliations to find countries
                 for (let i = 0; i < affiliations.length; i++) {
                     const affil = affiliations[i];  // No need to lowercase here anymore
             
@@ -457,7 +457,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                                 } else {
                                     coAuthorCountries.add(entry.name);
                                 }
-                                break;  // Stop checking other aliases for this entry
+                                break;  
                             }
                         }
                     }
