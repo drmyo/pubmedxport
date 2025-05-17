@@ -22,9 +22,8 @@ bibliography: paper.bib
 ---
 
 abstract: |
-  Efficient extraction of structured metadata from biomedical literature is critical for systematic reviews, meta-analyses, and bibliometric studies. PubMed, while central to biomedical research, offers limited export capabilities. We present PubMedXport, a web-based tool that enables users to search PubMed and export results, including abstracts, in CSV, JSON, and BibTeX formats. Featuring an intuitive interface, customizable queries, parallel processing, and error reporting, PubMedXport streamlines data retrieval for systematic reviews, meta-analyses, and educational purposes. Developed through a combination of human expertise and AI-assisted coding, it exemplifies the accelerating role of AI in research tool development.
+  Efficient extraction of structured metadata from biomedical literature is critical for systematic reviews, meta-analyses, and bibliometric studies. PubMed [@nlm-pubmed], while central to biomedical research, offers limited export capabilities. We present PubMedXport, a web-based tool that enables users to search PubMed and export results, including abstracts, in CSV, JSON, and BibTeX formats. Featuring an intuitive interface, customizable queries, parallel processing, and error reporting, PubMedXport streamlines data retrieval for systematic reviews, meta-analyses, and educational purposes. Developed through a combination of human expertise and AI-assisted coding, it exemplifies the accelerating role of AI in research tool development.
 
-long-description: |
 ## Summary
 
   Efficient literature searching underpins evidence-based practice. PubMed, operated by the U.S. National Library of Medicine, offers robust search capabilities but limited export functionality: abstracts are excluded from CSVs, structured formats like JSON are unavailable, and BibTeX entries must be manually generated. Abstracts are only available as plain, unstructured text, hindering efficient data use.
@@ -97,7 +96,7 @@ Statement of Need: |
 
 ## Acknowledgments
 
-  We thank the National Library of Medicine (NLM) and the National Center for Biotechnology Information (NCBI) for maintaining PubMed and the E-utilities API, which underpin this project. We also acknowledge the assistance of ChatGPT, DeepSeek, and GitHub Copilot in the development of the tool. Their AI-assisted suggestions and code generation features were valuable in helping accelerate the coding process.
+  We thank the National Library of Medicine (NLM) and the National Center for Biotechnology Information (NCBI) for maintaining PubMed and the E-utilities API [@ncbi-eutils], which underpin this project. We also acknowledge the assistance of ChatGPT, DeepSeek, and GitHub Copilot in the development of the tool. Their AI-assisted suggestions and code generation features were valuable in helping accelerate the coding process.
 
 ## License
 
@@ -105,5 +104,5 @@ Statement of Need: |
 
 ## References
 
-  1. National Library of Medicine. PubMed Overview [@nlm-pubmed]. Available at: [https://pubmed.ncbi.nlm.nih.gov/about/](https://pubmed.ncbi.nlm.nih.gov/about/)
-  2. National Center for Biotechnology Information (NCBI). E-utilities API Documentation [@ncbi-eutils]. Available at: [https://www.ncbi.nlm.nih.gov/books/NBK25500/](https://www.ncbi.nlm.nih.gov/books/NBK25500/)
+  1. National Library of Medicine. PubMed Overview. Available at: [https://pubmed.ncbi.nlm.nih.gov/about/](https://pubmed.ncbi.nlm.nih.gov/about/)
+  2. National Center for Biotechnology Information (NCBI). E-utilities API Documentation. Available at: [https://www.ncbi.nlm.nih.gov/books/NBK25500/](https://www.ncbi.nlm.nih.gov/books/NBK25500/)
