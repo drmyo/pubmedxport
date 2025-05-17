@@ -18,6 +18,7 @@ affiliations:
     ror: 00p43ne90
 date: 2025-04-27
 journal: JOSS
+bibliography: paper.bib
 ---
 
 abstract: |
