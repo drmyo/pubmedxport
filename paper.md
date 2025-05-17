@@ -34,7 +34,7 @@ abstract: |
 
   PubMed provides free, high-quality access to MEDLINE and other biomedical resources, distinguishing itself from subscription-based platforms like Scopus and Web of Science. Despite its powerful search capabilities, its data export options are constrained, especially for structured or large-scale computational workflows. Tools that extend PubMed's export features are needed to meet the growing demands of systematic reviews and computational analysis.
 
-Statement of Need: |
+## Statement of Need:
 
   Researchers face several barriers when using PubMed for structured data collection:
 
@@ -103,6 +103,3 @@ Statement of Need: |
   Distributed under the MIT License.
 
 ## References
-
-  1. National Library of Medicine. PubMed Overview. Available at: [https://pubmed.ncbi.nlm.nih.gov/about/](https://pubmed.ncbi.nlm.nih.gov/about/)
-  2. National Center for Biotechnology Information (NCBI). E-utilities API Documentation. Available at: [https://www.ncbi.nlm.nih.gov/books/NBK25500/](https://www.ncbi.nlm.nih.gov/books/NBK25500/)
